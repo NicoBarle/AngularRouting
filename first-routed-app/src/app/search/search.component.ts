@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import { SpotifyService } from '../spotify.service';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { SpotifyService } from '../spotify.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'app-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.css']
 })
-export class AppComponent {
+export class SearchComponent  {
   query: string;
   title = 'first-routed-app';
   obsTrack: Observable<Object>;
@@ -17,12 +17,21 @@ export class AppComponent {
 
   }
 
-  submit(query:HTMLInputElement): void {
+  submit(query: HTMLInputElement): void {
+
     if (!query.value) {
       return;
     }
     this.query = query.value;
     this.obsTrack = this.spotify.searchTrack(this.query);
-    this.obsTrack.subscribe((data) => this.results = data);
+    this.obsTrack.subscribe((data) => { this.results = data; console.log(this.results) });
   }
+
+  renderResults(res: any): void {
+    this.results = null;
+    if (res && res.tracks && res.tracks.items) {
+      this.results = res.tracks.items;
+    }
+  }
+
 }
